@@ -1,29 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const Footer = () => {
+function Footer({ contacts, setContacts, status, setStatus }) {
+  const [activeSize, setActiveSize] = useState(0);
+
+  const activeButton = () => {
+    const array = contacts.filter((item) => item.complete);
+    setContacts(array);
+  };
+  const onClickAvailable = (e) => {
+    setStatus(e.target.name);
+  };
+
+  const CompletedList = (e) => {};
+  useEffect(() => {
+    setActiveSize(0);
+    contacts.map((item) => {
+      if (item.complete) {
+        setActiveSize((n) => n + 1);
+      }
+    });
+  }, [contacts]);
+
   return (
     <footer className="footer">
       <span className="todo-count">
-        <strong>2</strong>
-        items left
+        <strong>{activeSize}</strong> items left
       </span>
+      {contacts.length > 0 && (
+        <ul className="filters">
+          <li>
+            <a
+              href="#/"
+              name="All"
+              className={status === "All" ? "selected" : ""}
+              onClick={onClickAvailable}
+            >
+              All
+            </a>
+          </li>
+          <li>
+            <a
+              href="#/"
+              name="Active"
+              className={status === "Active" ? "selected" : ""}
+              onClick={onClickAvailable}
+            >
+              Active
+            </a>
+          </li>
+          <li>
+            <a
+              href="#/"
+              name="Completed"
+              className={status === "Completed" ? "selected" : ""}
+              onClick={onClickAvailable}
+            >
+              Completed
+            </a>
+          </li>
+        </ul>
+      )}
 
-      <ul className="filters">
-        <li>
-          <a href="#/" className="selected">
-            All
-          </a>
-        </li>
-        <li>
-          <a href="#/">Active</a>
-        </li>
-        <li>
-          <a href="#/">Completed</a>
-        </li>
-      </ul>
-
-      <button className="clear-completed">Clear completed</button>
-
+      <button className="clear-completed" onClick={activeButton}>
+        Clear completed
+      </button>
       <footer className="info">
         <p>Click to edit a todo</p>
         <p>
@@ -35,6 +75,5 @@ const Footer = () => {
       </footer>
     </footer>
   );
-};
-
+}
 export default Footer;
